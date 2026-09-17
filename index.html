@@ -3,124 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games</title> <!-- change this to the title of the tab you want -->
+    <meta name="description" content="DaBigR — play your favorite browser games instantly.">
+    <title>DaBigR | Play Something Fun</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ink: #f7f7ff;
+            --muted: #aaa9c7;
+            --purple: #8b5cf6;
+            --pink: #f05ac7;
+            --panel: rgba(28, 25, 61, .78);
+            --border: rgba(255, 255, 255, .12);
+        }
+
+        * { box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #6a4c9c;
-            color: white;
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: "DM Sans", sans-serif;
+            background: #0c0b1b;
+            background-image: radial-gradient(circle at 10% 0%, #32205b 0, transparent 34%), radial-gradient(circle at 100% 20%, #4b164a 0, transparent 30%), linear-gradient(135deg, #0c0b1b 0%, #171331 100%);
         }
+
         header {
-            background-color: #5e3b8f;
-            color: white;
-            padding: 20px 30px;
             display: flex;
-            justify-content: flex-end;
-        }
-        header button {
-            background-color: #7f5f9f;
-            border: none;
-            padding: 10px 20px;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-left: 20px;
-        }
-        header button:hover {
-            background-color: #9b6fcf;
-        }
-        .section {
-            padding: 40px;
-            text-align: center;
-            background-color: #7f5f9f;
-        }
-        .game-card {
-            display: inline-block;
-            width: 200px;
-            height: 250px;
-            background-color: #8e6ba7;
-            margin: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            text-align: center;
-        }
-        .game-card img {
-            width: 100%;
-            height: 160px;
-            border-radius: 10px 10px 0 0;
-        }
-        .game-card h3 {
-            margin-top: 10px;
-        }
-        footer {
-            background-color: #5e3b8f;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-        iframe.fullscreen {
-            position: fixed;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px clamp(22px, 6vw, 90px);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            background: rgba(10, 9, 24, .55);
+            backdrop-filter: blur(16px);
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            z-index: 1000;
+            z-index: 5;
         }
+        .brand { font: 700 1.45rem "Space Grotesk", sans-serif; letter-spacing: -.05em; }
+        .brand span { color: var(--pink); }
+        nav { display: flex; gap: 10px; }
+        nav button {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 10px 20px;
+            color: var(--ink);
+            background: transparent;
+            font: 700 .9rem "DM Sans", sans-serif;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+        nav button:hover, nav button.active { background: var(--purple); border-color: var(--purple); transform: translateY(-2px); }
+
+        main { width: min(1180px, calc(100% - 40px)); margin: auto; }
+        .hero { padding: clamp(65px, 11vw, 125px) 0 52px; max-width: 720px; }
+        .eyebrow { color: #c5aaff; font-size: .8rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+        h1 { font: 700 clamp(2.8rem, 8vw, 6.5rem)/.94 "Space Grotesk", sans-serif; letter-spacing: -.08em; margin: 16px 0 22px; }
+        h1 strong { color: #e78dd5; }
+        .hero p { color: var(--muted); font-size: 1.1rem; line-height: 1.7; max-width: 550px; margin: 0; }
+
+        .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 22px; }
+        .toolbar h2 { font: 600 1.8rem "Space Grotesk", sans-serif; margin: 0; }
+        .search { width: min(270px, 45vw); padding: 12px 17px; border: 1px solid var(--border); border-radius: 999px; outline: none; color: white; background: rgba(255,255,255,.08); font: inherit; }
+        .search:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(240,90,199,.15); }
+
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 20px; padding-bottom: 80px; }
+        .game-card {
+            position: relative; overflow: hidden; min-height: 300px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer;
+            background: var(--panel); box-shadow: 0 15px 35px rgba(0,0,0,.2); transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .game-card:hover { transform: translateY(-8px); border-color: rgba(240,90,199,.75); box-shadow: 0 22px 45px rgba(0,0,0,.35); }
+        .game-card img { display: block; width: 100%; height: 195px; object-fit: cover; transition: transform .4s ease; }
+        .game-card:hover img { transform: scale(1.07); }
+        .game-card::after { content: "PLAY NOW  →"; position: absolute; top: 160px; right: 14px; padding: 8px 11px; border-radius: 8px; color: white; background: var(--pink); font-size: .68rem; font-weight: 700; opacity: 0; transform: translateY(6px); transition: .25s ease; }
+        .game-card:hover::after { opacity: 1; transform: translateY(0); }
+        .game-info { padding: 17px 18px 19px; }
+        .game-info h3 { margin: 0 0 6px; font: 600 1.18rem "Space Grotesk", sans-serif; }
+        .game-info p { margin: 0; color: var(--muted); font-size: .88rem; }
+        .tag { display: inline-block; margin-top: 13px; padding: 4px 9px; border-radius: 999px; color: #d4c5ff; background: rgba(139,92,246,.18); font-size: .7rem; font-weight: 700; }
+        .no-results { grid-column: 1 / -1; color: var(--muted); text-align: center; padding: 45px; }
+        footer { padding: 28px 20px; color: var(--muted); text-align: center; border-top: 1px solid var(--border); font-size: .9rem; }
+
+        .fullscreen { position: fixed; inset: 0; z-index: 20; width: 100%; height: 100%; border: 0; background: #080711; }
+        .close-game { position: fixed; top: 18px; right: 20px; z-index: 21; border: 0; border-radius: 50%; width: 44px; height: 44px; color: white; background: #f05ac7; font-size: 1.4rem; cursor: pointer; }
+        @media (max-width: 560px) { header { padding: 17px 20px; } .brand { font-size: 1.2rem; } nav button { padding: 8px 12px; } .toolbar { align-items: flex-start; flex-direction: column; } .search { width: 100%; } }
     </style>
+</head>
+<body>
+    <header>
+        <div class="brand">DaBig<span>R</span> ✦</div>
+        <nav aria-label="Main navigation">
+            <button class="active" onclick="location.href='index.html'">Games</button>
+            <button onclick="location.href='apps.html'">Apps</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="eyebrow">Your next obsession starts here</div>
+            <h1>Play more.<br><strong>Wait less.</strong></h1>
+            <p>Jump straight into fast, free browser games. Pick a game, get comfortable, and let the fun begin.</p>
+        </section>
+
+        <div class="toolbar">
+            <h2>Featured games</h2>
+            <input class="search" type="search" placeholder="Search games..." aria-label="Search games" oninput="filterGames(this.value)">
+        </div>
+
+        <section class="game-grid" id="gameGrid" aria-label="Featured games">
+            <article class="game-card" data-name="krunker.io shooter fps" onclick="openFullscreen('https://krunker.io/')">
+                <img src="https://loremflickr.com/640/420/fps,shooter?lock=11" alt="Action scene for Krunker.io" loading="lazy">
+                <div class="game-info"><h3>Krunker.io</h3><p>Fast-paced multiplayer action</p><span class="tag">FPS</span></div>
+            </article>
+            <article class="game-card" data-name="agar.io arcade" onclick="openFullscreen('https://agar.io/')">
+                <img src="https://loremflickr.com/640/420/colorful,bubbles?lock=12" alt="Colorful bubbles for Agar.io" loading="lazy">
+                <div class="game-info"><h3>Agar.io</h3><p>Grow big or get eaten</p><span class="tag">ARCADE</span></div>
+            </article>
+            <article class="game-card" data-name="slither.io snake arcade" onclick="openFullscreen('https://slither.io/')">
+                <img src="https://loremflickr.com/640/420/snake,neon?lock=13" alt="Neon snake for Slither.io" loading="lazy">
+                <div class="game-info"><h3>Slither.io</h3><p>Become the biggest snake</p><span class="tag">ARCADE</span></div>
+            </article>
+            <article class="game-card" data-name="shell shockers eggs shooter" onclick="openFullscreen('https://shellshock.io/')">
+                <img src="https://loremflickr.com/640/420/egg,war?lock=14" alt="Egg character for Shell Shockers" loading="lazy">
+                <div class="game-info"><h3>Shell Shockers</h3><p>Egg-cellent online battles</p><span class="tag">ACTION</span></div>
+            </article>
+            <article class="game-card" data-name="diep.io tank strategy" onclick="openFullscreen('https://diep.io/')">
+                <img src="https://loremflickr.com/640/420/tank,battle?lock=15" alt="Tank battle for Diep.io" loading="lazy">
+                <div class="game-info"><h3>Diep.io</h3><p>Upgrade, aim, and dominate</p><span class="tag">STRATEGY</span></div>
+            </article>
+            <article class="game-card" data-name="shooter game action" onclick="openFullscreen('https://cryzen.io/match-link?matchId=2YVxUMu0k')">
+                <img src="https://loremflickr.com/640/420/soldier,action?lock=16" alt="Soldier in an action scene" loading="lazy">
+                <div class="game-info"><h3>Shooter Game</h3><p>Lock in and take the shot</p><span class="tag">ACTION</span></div>
+            </article>
+        </section>
+    </main>
+
+    <footer><p>&copy; 2026 DaBigR · Made for your next gaming break</p></footer>
+
     <script>
         function openFullscreen(url) {
             const iframe = document.createElement('iframe');
             iframe.src = url;
             iframe.className = 'fullscreen';
+            iframe.title = 'Game window';
             iframe.setAttribute('allowfullscreen', '');
             document.body.appendChild(iframe);
+            const close = document.createElement('button');
+            close.className = 'close-game';
+            close.setAttribute('aria-label', 'Close game');
+            close.textContent = '×';
+            close.onclick = () => { iframe.remove(); close.remove(); };
+            document.body.appendChild(close);
+        }
 
-            iframe.onclick = () => {
-                iframe.remove(); // closes the iframe once you click (remove this if not wanted)
-            };
+        function filterGames(query) {
+            const search = query.toLowerCase().trim();
+            let visible = 0;
+            document.querySelectorAll('.game-card').forEach(card => {
+                const matches = card.dataset.name.includes(search);
+                card.hidden = !matches;
+                if (matches) visible++;
+            });
+            let message = document.querySelector('.no-results');
+            if (!visible) {
+                if (!message) { message = document.createElement('p'); message.className = 'no-results'; message.textContent = 'No games found — try another search.'; document.getElementById('gameGrid').appendChild(message); }
+            } else if (message) message.remove();
         }
     </script>
-</head>
-<body>
-    <header>
-        <button onclick="location.href='index.html'">Games</button>
-        <button onclick="location.href='apps.html'">Apps</button>
-    </header>
-    <div class="section">
-        <h2>Games</h2> <!-- change this to what you want above ur games -->
-        <div class="game-card" onclick="openFullscreen('https://krunker.io/')"> 
-            <img src="https://via.placeholder.com/200x160" alt="Krunker.io">
-            <h3>Krunker.io</h3>
-        </div>
-        <div class="game-card" onclick="openFullscreen('https://agar.io/')">
-            <img src="https://via.placeholder.com/200x160" alt="Agar.io">
-            <h3>Agar.io</h3>
-        </div>
-        <div class="game-card" onclick="openFullscreen('https://slither.io/')">
-            <img src="https://via.placeholder.com/200x160" alt="Slither.io">
-            <h3>Slither.io</h3>
-        </div>
-        <div class="game-card" onclick="openFullscreen('https://shellshock.io/')">
-            <img src="https://via.placeholder.com/200x160" alt="Shell Shockers">
-            <h3>Shell Shockers</h3>
-        </div>
-        <div class="game-card" onclick="openFullscreen('https://diep.io/')">
-            <img src="https://via.placeholder.com/200x160" alt="Diep.io">
-            <h3>Diep.io</h3>
-        </div>
-        <div class="game-card" onclick="openFullscreen('https://cryzen.io/match-link?matchId=2YVxUMu0k')">
-            <img src="https://via.placeholder.com/200x160" alt="Shooter Game">
-            <h3>Shooter Game</h3>
-        </div>
-    </div>
-    <footer>
-        <p>&copy; 2024 insert website name here</p> 
-    </footer>
-</body> 
+</body>
 </html>
